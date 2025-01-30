@@ -5,27 +5,28 @@
         <div class="container">
             <div class="input-area">
                 <h2>Encoded</h2>
-                <textarea
+                <JwtTextarea
                     v-model="token"
-                    placeholder="Paste your JWT token here..."
-                    rows="6"
-                ></textarea>
+                    variant="input"
+                    :rows="8"
+                    :cols="50"
+                />
             </div>
 
             <div class="output-area">
                 <h2>Decoded</h2>
-                <div>
-                    <JwtTextarea
-                        v-model="decodedToken.header"
-                        variant="header"
-                    />
-                </div>
-                <div>
-                    <JwtTextarea
-                        v-model="decodedToken.payload"
-                        variant="payload"
-                    />
-                </div>
+                <JwtTextarea
+                    v-model="decodedToken.header"
+                    variant="header"
+                    :rows="8"
+                    :cols="50"
+                />
+                <JwtTextarea
+                    v-model="decodedToken.payload"
+                    variant="payload"
+                    :rows="8"
+                    :cols="50"
+                />
             </div>
         </div>
 
@@ -42,7 +43,7 @@ interface DecodedToken {
 const token = ref("");
 const error = ref<string | null>(null);
 
-const decodedToken: ComputedRef<DecodedToken> = computed(() => {
+const decodedToken = computed<DecodedToken>(() => {
     if (!token.value) {
         error.value = null;
         return { header: "", payload: "" };
@@ -64,15 +65,16 @@ const decodedToken: ComputedRef<DecodedToken> = computed(() => {
     }
 
     error.value = null;
-    return {
-        header,
-        payload,
-    };
+    return { header, payload };
 });
 
 function decodeBase64(encoded: string): string {
-    const decoded = atob(encoded);
-    return JSON.stringify(JSON.parse(decoded), null, 2);
+    try {
+        const decoded = atob(encoded);
+        return JSON.stringify(JSON.parse(decoded), null, 2);
+    } catch (e) {
+        return "Invalid Base64 encoding";
+    }
 }
 </script>
 
@@ -89,11 +91,6 @@ h1 {
     margin-bottom: 20px;
 }
 
-h2,
-h3 {
-    margin-bottom: 10px;
-}
-
 .container {
     display: flex;
     justify-content: space-between;
@@ -105,22 +102,6 @@ h3 {
     padding: 10px;
 }
 
-textarea {
-    width: 100%;
-    font-family: monospace;
-    font-size: 14px;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    resize: none;
-    margin-top: 0;
-}
-
-.input-area textarea {
-    height: 50vh;
-}
-
 .output-area {
     flex: 1;
     padding: 10px;
@@ -129,70 +110,9 @@ textarea {
     justify-content: flex-start;
 }
 
-h2 {
-    margin-bottom: 20px;
-}
-
-textarea.header,
-textarea.payload {
-    height: 23vh;
-    margin-top: 0;
-}
-
-textarea.header {
-    background-color: #f0f8ff;
-    border: 1px solid #4682b4;
-    color: #4682b4;
-}
-
-textarea.payload {
-    background-color: #fff8dc;
-    border: 1px solid #daa520;
-    color: #daa520;
-}
-
-textarea.header::placeholder {
-    color: #4682b4;
-}
-
-textarea.payload::placeholder {
-    color: #daa520;
-}
-
-h3.header {
-    color: #4682b4;
-}
-
-h3.payload {
-    color: #daa520;
-}
-
 .error {
     color: red;
     text-align: center;
     margin-top: 10px;
-}
-
-.output-area div {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 4vh;
-}
-
-.input-area textarea,
-.output-area textarea {
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-.output-area {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-
-.output-area label:last-child textarea.payload {
-    margin-bottom: 0;
 }
 </style>
