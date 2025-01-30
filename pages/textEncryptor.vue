@@ -1,42 +1,32 @@
 <template>
     <section>
-        <h1>Caesar Cipher Tool</h1>
+        <MyTitle content="Caesar Cipher Tool" color="green" />
 
-        <label>
-            Enter text:
-            <input v-model="text" type="text" placeholder="Type here..." />
-        </label>
+        <MyTextarea v-model="text" title="Enter text:" />
 
-        <label>
-            Shift amount:
-            <input
-                v-model.number="shift"
-                type="number"
-                min="1"
-                placeholder="Enter shift value..."
-            />
-        </label>
+        <label for="shit-amount"> Shift amount: </label>
+        <input
+            id="shift-amount"
+            v-model.number="shift"
+            type="number"
+            min="1"
+            placeholder="Enter shift value..."
+        />
 
-        <label>
-            Select action:
-            <select v-model="action">
-                <option value="encrypt">Encrypt</option>
-                <option value="decrypt">Decrypt</option>
-            </select>
-        </label>
+        <label for="select-action"> Select action: </label>
+        <select id="select-action" v-model="action">
+            <option value="encrypt">Encrypt</option>
+            <option value="decrypt">Decrypt</option>
+        </select>
 
-        <div v-if="result !== ''">
-            <h2>Result:</h2>
-            <p>
-                <strong>{{ result }}</strong>
-            </p>
-        </div>
+        <h2>Result:</h2>
+        <p>
+            <strong>{{ result }}</strong>
+        </p>
     </section>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-
 // Reactive state for user inputs
 const text = ref("");
 const shift = ref(1);
@@ -94,6 +84,7 @@ section {
 label {
     display: block;
     margin: 10px 0;
+    font-weight: bold;
 }
 input,
 select {
