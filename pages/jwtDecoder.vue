@@ -29,53 +29,14 @@
                 />
             </div>
         </div>
-
         <p v-if="error" class="error">{{ error }}</p>
     </section>
 </template>
 
 <script lang="ts" setup>
-interface DecodedToken {
-    header?: string;
-    payload?: string;
-}
-
 const token = ref("");
-const error = ref<string | null>(null);
 
-const decodedToken = computed<DecodedToken>(() => {
-    if (!token.value) {
-        error.value = null;
-        return { header: "", payload: "" };
-    }
-
-    const [headerPart, payloadPart] = token.value.split(".");
-
-    if (!headerPart || !payloadPart) {
-        error.value = "Invalid JWT token";
-        return { header: "", payload: "" };
-    }
-
-    const header = decodeBase64(headerPart);
-    const payload = decodeBase64(payloadPart);
-
-    if (!header || !payload) {
-        error.value = "Invalid JWT token";
-        return { header: "", payload: "" };
-    }
-
-    error.value = null;
-    return { header, payload };
-});
-
-function decodeBase64(encoded: string): string {
-    try {
-        const decoded = atob(encoded);
-        return JSON.stringify(JSON.parse(decoded), null, 2);
-    } catch (e) {
-        return "Invalid Base64 encoding";
-    }
-}
+const { error, token: decodedToken } = useJwtDecoder(token);
 </script>
 
 <style scoped>

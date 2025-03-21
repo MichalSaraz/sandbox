@@ -3,17 +3,29 @@
         <label :for="id">{{ label }}</label>
         <textarea
             :id="id"
-            :class="displayVariant"
             v-model="modelValue"
+            :class="props.variant"
             :rows="rows"
             :cols="cols"
             :placeholder="placeholder"
             :readonly="variant !== 'input'"
-        />
+        ></textarea>
     </div>
 </template>
 
 <script setup lang="ts">
+/**
+ * 1. Přidat variantu pro input
+ * 2. Přidat label k variantě pro input
+ * 3. Label udělat dynamicky podle varianty:
+ *    - header -> "Header"
+ *    - payload -> "Payload"
+ *    - input -> "Token"
+ * 4. Nastylovat input podle varianty
+ * 5. Nastavit placeholder podle varianty
+ * 6. Přidat možnost nastavit velikost (počet řádků a sloupců) a toto nastavení použít (nenastavovat velikost pomocí CSS)
+ */
+
 interface Props {
     variant: "header" | "payload" | "input";
     rows?: number;
@@ -23,31 +35,25 @@ interface Props {
 const props = defineProps<Props>();
 const modelValue = defineModel<string>({});
 
-const displayVariant = computed(() => {
-    return props.variant;
-});
-
 const generateRandomID = () => {
-    return `${props.variant}-${Math.floor(Math.random() * 900) + 100}`;
+    return `${props.variant}-${useId()}`;
 };
 
 const id = generateRandomID();
 
-const label = computed(() => {
-    return props.variant === "header"
+const label =
+    props.variant === "header"
         ? "Header"
         : props.variant === "payload"
         ? "Payload"
         : "Token";
-});
 
-const placeholder = computed(() => {
-    return props.variant === "header"
+const placeholder =
+    props.variant === "header"
         ? "JWT Header"
         : props.variant === "payload"
         ? "JWT Payload"
         : "Paste your JWT token here...";
-});
 </script>
 
 <style scoped>

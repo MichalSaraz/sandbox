@@ -21,6 +21,7 @@
     },
     "devDependencies": {
         "@nuxt/eslint": "^0.7.5",
+        "@nuxtjs/tailwindcss": "^6.13.1",
         "commitizen": "^4.3.1",
         "cz-conventional-changelog": "^3.3.0"
     }
